@@ -1,5 +1,17 @@
-import { Filter } from "../../types"
+import { Filter, Timetable } from "../../types"
 
-export default async function getTimetables(filter?: Filter) {
-  return "Hello, Timetables!"
+export async function getTimetables(filter?: Filter) {
+  const timetables = await Bun.file("./src/parsed/timetables.json").json()
+
+  return timetables
+}
+
+export async function getTimetable(id: string) {
+  const timetables: Timetable[] = await Bun.file(
+    "./src/parsed/timetables.json"
+  ).json()
+
+  const timetable = timetables.find((timetable) => timetable.id === id)
+
+  return timetable
 }

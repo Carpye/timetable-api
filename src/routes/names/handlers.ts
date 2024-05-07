@@ -27,6 +27,15 @@ export async function getNames(filter?: Filter) {
     .map((info) => info.name)
 }
 
+export async function getName(id: string) {
+  const names = (await Bun.file("./src/parsed/info.json").json()) as {
+    id: string
+    name: string
+  }[]
+
+  return names.find((info) => info.id === id)!.name
+}
+
 async function scrapNames() {
   const ids = await Bun.file(
     "D:\\Projects\\elysia-timetable-scraper\\src\\parsed\\ids.json"

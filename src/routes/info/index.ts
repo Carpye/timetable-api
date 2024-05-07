@@ -1,9 +1,9 @@
 import Elysia from "elysia"
 import { Filter } from "../../types"
-import { getInfo } from "./handlers"
+import { getInfos } from "./handlers"
 
 const infoRoutes = new Elysia({ prefix: "/info" })
-  .get("/", () => getInfo())
+  .get("/", () => getInfos())
   .get("/:filter", ({ params, set }) => {
     const filter = params.filter
 
@@ -11,7 +11,7 @@ const infoRoutes = new Elysia({ prefix: "/info" })
       set.status = 400
       return "Invalid filter. Available filters: teacher, class, classroom"
     }
-    return getInfo(filter as Filter)
+    return getInfos(filter as Filter)
   })
 
 export default infoRoutes

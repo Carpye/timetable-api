@@ -3,17 +3,17 @@ import { TIMETABLES_URL } from "../../config"
 import { api } from "../../lib/api"
 import { Filter } from "../../types"
 
-export async function getInfo(filter?: Filter) {
-  const names = (await Bun.file("./src/parsed/info.json").json()) as {
+export async function getInfos(filter?: Filter) {
+  const infos = (await Bun.file("./src/parsed/info.json").json()) as {
     id: string
     name: string
   }[]
 
   if (!filter) {
-    return names
+    return infos
   }
 
-  return names.filter((name) => {
+  return infos.filter((name) => {
     switch (filter) {
       case "teacher":
         return name.id.startsWith("n")
