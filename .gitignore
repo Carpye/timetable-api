@@ -33,6 +33,7 @@ yarn-error.log*
 .env
 database
 prisma
+src/parsed/*
 
 # vercel
 .vercel
