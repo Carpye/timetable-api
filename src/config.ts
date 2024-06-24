@@ -1,4 +1,10 @@
-export const port = 8080
-export const TIMETABLES_URL = "https://zseis.zgora.pl/plan/plany"
-export const login = "ckziu"
-export const password = "kmno4"
+import { Config } from "./types"
+import defaultConfig from "./defaultConfig"
+
+const config = {
+  ...defaultConfig,
+  showApiCalls: true,
+  scrapeOnStart: false,
+} satisfies Config
+
+export default config

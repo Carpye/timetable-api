@@ -1,13 +1,24 @@
-import axios from "axios"
-import { login, password } from "../config"
+import axios, { AxiosDefaults, CreateAxiosDefaults } from "axios"
+import config from "../config"
 import chalk from "chalk"
 
+const headers: { [key: string]: any } = {
+  "Content-Type": "application/json",
+}
+
+if (process.env.LOGIN && process.env.PASSWORD) {
+  headers["Authorization"] =
+    "Basic " +
+    Buffer.from(`${process.env.LOGIN}:${process.env.PASSWORD}`).toString(
+      "base64"
+    )
+} else if (!process.env.LOGIN !== !process.env.PASSWORD) {
+  throw new Error("LOGIN and PASSWORD must be both defined or undefined")
+}
+
 export const api = axios.create({
-  headers: {
-    "Content-Type": "application/json",
-    Authorization:
-      "Basic " + Buffer.from(`${login}:${password}`).toString("base64"),
-  },
+  baseURL: config.timetablesUrl,
+  headers,
 })
 
 api.interceptors.request.use((config) => {
@@ -20,12 +31,13 @@ api.interceptors.response.use((response) => {
   const end = Date.now()
   const milliseconds = end - start
   response.headers["request-duration"] = milliseconds
-  console.log(
-    chalk.cyanBright("[AXIOS]"),
-    chalk.greenBright("Request:"),
-    chalk.blueBright(response.config.url),
-    "-",
-    chalk.yellowBright(`${milliseconds}ms`)
-  )
+  if (config.showApiCalls)
+    console.log(
+      chalk.cyanBright("[API]"),
+      chalk.greenBright("Request:"),
+      chalk.blueBright(response.config.url),
+      "-",
+      chalk.yellowBright(`${milliseconds}ms`)
+    )
   return response
 })
