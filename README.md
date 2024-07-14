@@ -14,7 +14,7 @@
 
 This API scrapes Vulcan-generated timetables. I've seen there are few layouts of timetable page but I had only tested the layout shown below:
 
-![Timetable Layout](images\timetable.png)
+![Timetable Layout](images/timetable.png)
 
 This project uses [Cheerio](https://cheerio.js.org) for scraping timetables and [Elysia](https://elysiajs.com) for API
 
