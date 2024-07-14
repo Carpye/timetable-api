@@ -6,6 +6,14 @@ import { getName } from "../routes/names/handlers"
 import { Lesson, Timetable } from "../types"
 import chalk from "chalk"
 
+/*
+  ! DISCLAIMER !
+
+  This code is awful and I'm sorry for that. I'm not proud of it but it works.
+  Working with scraping vulcan generated timetable is a nightmare.
+
+*/
+
 export async function scrapeTimetables() {
   const infos = await getInfos()
 
@@ -114,23 +122,31 @@ export async function scrapTimetable(id = "o12") {
 
     switch (filter) {
       case "class":
-        // classId = id
+        classId = id
         className = name
         classShortname = name
         break
       case "teacher":
-        // teacherId = id
+        teacherId = id
         teacherName = name
         teacherShortname = name
         break
       case "classroom":
-        // classroomId = id
+        classroomId = id
         classroomName = name
         classroomShortname = name
         break
     }
 
-    const subject = isEmpty ? "" : $(el).find("> .p").text()
+    let subject = isEmpty ? "" : $(el).find("> .p").text()
+
+    const group = $(el).text().includes("1/2")
+      ? "1/2"
+      : $(el).text().includes("2/2")
+      ? "2/2"
+      : null
+
+    if (group && !subject) subject = $(el).find("span > .p").text()
 
     const teacher = $(el).find(".n")
     if (teacher.length) {
@@ -157,8 +173,8 @@ export async function scrapTimetable(id = "o12") {
         {
           class: {
             id: classId,
-            group: classGroup,
-            shortname: subject,
+            group: group,
+            shortname: classShortname,
           },
           classroom: {
             id: classroomId,
@@ -181,7 +197,7 @@ export async function scrapTimetable(id = "o12") {
       const firstClassEl = $(firstClass)
       const secondClassEl = $(secondClass)
 
-      const firstClassName = firstClassEl.find("span.p").text()
+      const firstClassName = firstClassEl.find("span.o").text()
       const firstClassId = ""
 
       const firstTeacher = firstClassEl.find("a.n").text()
@@ -196,7 +212,9 @@ export async function scrapTimetable(id = "o12") {
         .attr("href")!
         .replace(".html", "")
 
-      const secondClassName = secondClassEl.find("span.p").text()
+      const firstSubject = firstClassEl.find("span.p").text()
+
+      const secondClassName = secondClassEl.find("span.o").text()
       const secondClassId = ""
 
       const secondTeacher = secondClassEl.find("a.n").text()
@@ -211,6 +229,8 @@ export async function scrapTimetable(id = "o12") {
         .find("a.s")
         .attr("href")!
         .replace(".html", "")
+
+      const secondSubject = secondClassEl.find("span.p").text()
 
       lesson.classes = [
         {
@@ -228,7 +248,7 @@ export async function scrapTimetable(id = "o12") {
             shortname: firstTeacher,
           },
           subject: {
-            name: subject,
+            name: firstSubject,
           },
         },
         {
@@ -246,7 +266,7 @@ export async function scrapTimetable(id = "o12") {
             shortname: secondTeacher,
           },
           subject: {
-            name: subject,
+            name: secondSubject,
           },
         },
       ]

@@ -10,8 +10,7 @@
     "start": "bun .",
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "bun run --watch src/index.ts",
-    "scrape": "bun run src/scripts/scrape.ts",
-    "scrape-timetables": "bun run src/scripts/scrapeTimetables.ts"
+    "scrape": "bun run src/scripts/scrape.ts"
   },
   "dependencies": {
     "@elysiajs/cron": "^1.0.3",
