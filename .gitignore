@@ -33,7 +33,7 @@ yarn-error.log*
 .env
 src/parsed
 src/parsed/*.json
-images
+
 
 # vercel
 .vercel
