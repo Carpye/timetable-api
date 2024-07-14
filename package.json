@@ -1,11 +1,19 @@
 {
-  "name": "@bun-examples/elysia",
-  "version": "1.0.50",
+  "name": "elektronik-timetable-scraper",
+  "version": "0.0.1",
+  "author": {
+    "name": "Kacper Kozłowksi (Carpye)",
+    "email": "hello.carpye@gmail.com",
+    "url": "https://github.com/carpye"
+  },
   "scripts": {
+    "start": "bun .",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "bun run --watch src/index.ts"
+    "dev": "bun run --watch src/index.ts",
+    "scrape": "bun run src/scripts/scrape.ts"
   },
   "dependencies": {
+    "@elysiajs/cron": "^1.0.3",
     "@elysiajs/swagger": "^1.0.4",
     "axios": "^1.6.8",
     "chalk": "^5.3.0",

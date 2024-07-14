@@ -1,9 +1,10 @@
 import Elysia from "elysia"
-import { Filter } from "../../types"
 import { getTimetable, getTimetables } from "./handlers"
 
 const timetablesRouter = new Elysia({ prefix: "/timetables" })
-  .get("/", () => getTimetables())
+  .get("/", () => {
+    return getTimetables()
+  })
   .get("/:id", ({ params, set }) => {
     const id = params.id
 

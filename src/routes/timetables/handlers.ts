@@ -1,6 +1,6 @@
-import { Filter, Timetable } from "../../types"
+import { Timetable } from "../../types"
 
-export async function getTimetables(filter?: Filter) {
+export async function getTimetables() {
   const timetables = await Bun.file("./src/parsed/timetables.json").json()
 
   return timetables

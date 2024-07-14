@@ -1,38 +1,20 @@
-import { load } from "cheerio"
-import { TIMETABLES_URL } from "../../config"
-import { api } from "../../lib/api"
-
 export async function getIds(filter?: "teacher" | "class" | "classroom") {
-  const { data: html } = await api.get(TIMETABLES_URL)
+  const ids = (await Bun.file("./src/parsed/ids.json").json()) as string[]
 
-  const $ = load(html)
+  if (!filter) {
+    return ids
+  }
 
-  const list = Object.values($("td a"))
-    .map((element) => {
-      const href = element?.attribs?.href
-
-      if (!href || !href.endsWith(".html")) {
-        return null
-      }
-
-      const name = $(`td a[href='${element?.attribs?.href}']`)
-        .text()
-        .replace(".html", "")
-
-      if (filter) {
-        switch (filter) {
-          case "teacher":
-            return name.startsWith("n") ? name : null
-          case "class":
-            return name.startsWith("o") ? name : null
-          case "classroom":
-            return name.startsWith("s") ? name : null
-        }
-      } else {
-        return name
+  return ids
+    .map((id) => {
+      switch (filter) {
+        case "teacher":
+          return id.startsWith("n") ? id : null
+        case "class":
+          return id.startsWith("o") ? id : null
+        case "classroom":
+          return id.startsWith("s") ? id : null
       }
     })
     .filter(Boolean)
-
-  return list
 }
