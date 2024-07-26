@@ -10,7 +10,7 @@ import chalk from "chalk"
   ! DISCLAIMER !
 
   This code is awful and I'm sorry for that. I'm not proud of it but it works.
-  Working with scraping vulcan generated timetable is a nightmare.
+  Working with scraping vulcan-generated timetable is a nightmare.
 
 */
 
@@ -138,7 +138,7 @@ export async function scrapTimetable(id = "o12") {
         break
     }
 
-    let subject = isEmpty ? "" : $(el).find("> .p").text()
+    let subject = isEmpty ? "" : $(el).find(" .p").text()
 
     const group = $(el).text().includes("1/2")
       ? "1/2"
