@@ -106,11 +106,7 @@ export async function scrapTimetable(id = "o12") {
 
     let classId = ""
     let className = ""
-    let classGroup = null
     let classShortname = ""
-
-    let secondClassId = ""
-    let secondClassName = ""
 
     let teacherId = ""
     let teacherName = ""
