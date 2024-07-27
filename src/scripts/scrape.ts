@@ -6,7 +6,7 @@ import { scrapeTimetables } from "../scrapers/timetablesScraper"
 const args = process.argv.slice(2)
 
 if (args.length === 0) {
-  const scrapeScriptUsed = process.argv[1]?.includes("scrape")
+  const scrapeScriptUsed = process.argv[1]?.endsWith("scrape.ts")
 
   if (!scrapeScriptUsed) {
     if (config.scrapeOnStart) {
