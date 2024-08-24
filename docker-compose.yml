@@ -1,7 +1,7 @@
 version: "3.8"
 
 services:
-  my-bun-app:
+  elektronik-timetable-api:
     build: .
     ports:
       - "5678:5678"
