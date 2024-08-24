@@ -1,0 +1,9 @@
+version: "3.8"
+
+services:
+  my-bun-app:
+    build: .
+    ports:
+      - "5678:5678"
+    volumes:
+      - ./src/parsed:/app/src/parsed
