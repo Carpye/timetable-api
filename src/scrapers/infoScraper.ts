@@ -2,6 +2,7 @@ import { load } from "cheerio"
 import config from "../config"
 import { api } from "../lib/api"
 import chalk from "chalk"
+import { getAbsoluteFilePath } from "../lib/utils"
 
 export async function scrapeInfos() {
   console.log(
@@ -9,9 +10,7 @@ export async function scrapeInfos() {
     chalk.greenBright("Scraping infos...")
   )
 
-  const ids = await Bun.file(
-    "D:\\Projects\\elysia-timetable-scraper\\src\\parsed\\ids.json"
-  ).json()
+  const ids = await Bun.file("./src/parsed/ids.json").json()
 
   const infos: { id: string; name: string }[] = []
 
