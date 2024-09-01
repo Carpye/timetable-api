@@ -10,6 +10,7 @@ import timetablesRouter from "./routes/timetables"
 import { scrapeTimetables } from "./scrapers/timetablesScraper"
 import chalk from "chalk"
 import scrape from "./scripts/scrape"
+import validDateRoutes from "./routes/validDate"
 
 const app = new Elysia()
 
@@ -23,7 +24,7 @@ app.get("/", ({ headers, set }) => {
 
 app
   .group("/api", (app) =>
-    app.use(idsRoutes).use(namesRoutes).use(infoRoutes).use(timetablesRouter)
+    app.use(idsRoutes).use(namesRoutes).use(infoRoutes).use(timetablesRouter).use(validDateRoutes)
   )
   .use(swagger())
   .listen(process.env.PORT ?? 8080)
