@@ -2,8 +2,16 @@ version: "3.8"
 
 services:
   elektronik-timetable-api:
+    container_name: 'elektronik-timetable-api'
     build: .
     ports:
       - "5678:5678"
     volumes:
       - ./src/parsed:/app/src/parsed
+    networks:
+      - timetable-api
+
+networks:
+  timetable-api:
+    name: timetable-api
+    external: true
