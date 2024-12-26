@@ -12,23 +12,23 @@ export async function scrapeDate() {
 
 
   try {
-    const { data: html } = await api.get(`${config.timetablesUrl}/s3.html`)
+    const { data: html } = await api.get(`${config.timetablesUrl}/s1.html`)
     const $ = load(html)
     const dateText = $("td:contains('Obowiązuje od:')").text()
 
-
-    const dateMatch = dateText.match(/od (\d{1,2}\.\d{1,2}\.\d{4}) r\./)
-
+    const dateMatch = dateText.match(/Obowiązuje od: (\d{1,2}\.\d{1,2}\.\d{4}) r\./)
+    
+    
     if (dateMatch) {
       const date = { date: dateMatch[1] }
       const filePath = getAbsoluteFilePath("./src/parsed/date.json")
       await Bun.write(filePath, JSON.stringify(date, null, 2))
-
+      
       console.log(
         chalk.magentaBright("[SCRAPPER]"),
         chalk.greenBright("Scraped date: ", chalk.yellowBright(date.date))
       )
-
+      
       return date
     } else {
       console.log(
