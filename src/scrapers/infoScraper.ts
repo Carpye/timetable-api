@@ -3,12 +3,10 @@ import config from "../config"
 import { api } from "../lib/api"
 import chalk from "chalk"
 import { getAbsoluteFilePath } from "../lib/utils"
+import { scraperLog } from "../lib/console"
 
 export async function scrapeInfos() {
-  console.log(
-    chalk.magentaBright("[SCRAPPER]"),
-    chalk.greenBright("Scraping infos...")
-  )
+  console.log(scraperLog, chalk.greenBright("Scraping infos..."))
 
   const ids = await Bun.file("./src/parsed/ids.json").json()
 
@@ -28,7 +26,9 @@ export async function scrapeInfos() {
   Bun.write("./src/parsed/infos.json", JSON.stringify(infos, null, 2))
 
   console.log(
-    chalk.magentaBright("[SCRAPPER]"),
+    scraperLog,
     chalk.greenBright("Scraped infos: ", chalk.yellowBright(infos.length))
   )
+
+  return true
 }

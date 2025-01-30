@@ -34,7 +34,9 @@ if (args.length === 0) {
 }
 
 export default async function scrape() {
-  await scrapeIds()
-  await scrapeInfos()
-  await scrapeTimetables()
+  if (await scrapeIds()) {
+    if (await scrapeInfos()) {
+      await scrapeTimetables()
+    }
+  }
 }

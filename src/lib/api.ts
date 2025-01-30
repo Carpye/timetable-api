@@ -26,18 +26,26 @@ api.interceptors.request.use((config) => {
   return config
 })
 
-api.interceptors.response.use((response) => {
-  const start = response.config.headers["request-startTime"]
-  const end = Date.now()
-  const milliseconds = end - start
-  response.headers["request-duration"] = milliseconds
-  if (config.showApiCalls)
-    console.log(
-      chalk.cyanBright("[API]"),
-      chalk.greenBright("Request:"),
-      chalk.blueBright(response.config.url),
-      "-",
-      chalk.yellowBright(`${milliseconds}ms`)
-    )
-  return response
-})
+api.interceptors.response.use(
+  (response) => {
+    const start = response.config.headers["request-startTime"]
+    const end = Date.now()
+    const milliseconds = end - start
+    response.headers["request-duration"] = milliseconds
+    if (config.showApiCalls)
+      console.log(
+        chalk.cyanBright("[API]"),
+        chalk.greenBright("Request:"),
+        chalk.blueBright(response.config.url),
+        "-",
+        chalk.yellowBright(`${milliseconds}ms`)
+      )
+    return response
+  },
+  (error) => {
+    console.error(chalk.redBright("[API ERROR]"), error.message)
+
+    // Zwróć niestandardowy obiekt, aby zapobiec zakończeniu procesu
+    return Promise.resolve({ data: null, error })
+  }
+)

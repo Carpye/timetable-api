@@ -2,37 +2,65 @@ import { load } from "cheerio"
 import config from "../config"
 import { api } from "../lib/api"
 import chalk from "chalk"
+import { scraperLog } from "../lib/console"
+import axios from "axios"
 
 export async function scrapeIds() {
-  console.log(
-    chalk.magentaBright("[SCRAPPER]"),
-    chalk.greenBright("Scraping ids...")
-  )
+  console.log(scraperLog, chalk.greenBright("Scraping ids..."))
 
-  const { data: html } = await api.get(config.timetablesUrl)
+  try {
+    const response = await api.get(config.timetablesUrl)
+    const html = response.data
 
-  const $ = load(html)
+    if (!html) {
+      console.warn(
+        scraperLog,
+        chalk.yellow("Received empty response, skipping scraping")
+      )
+      return
+    }
 
-  const list = Object.values($("td a"))
-    .map((element) => {
-      const href = element?.attribs?.href
+    const $ = load(html)
 
-      if (!href || !href.endsWith(".html")) {
-        return null
-      }
+    const list = Object.values($("td a"))
+      .map((element) => {
+        const href = element?.attribs?.href
+        if (!href || !href.endsWith(".html")) return null
 
-      const name = $(`td a[href='${element?.attribs?.href}']`)
-        .text()
-        .replace(".html", "")
+        const name = $(`td a[href='${href}']`).text().replace(".html", "")
+        return name
+      })
+      .filter(Boolean)
 
-      return name
-    })
-    .filter(Boolean)
+    await Bun.write("./src/parsed/ids.json", JSON.stringify(list, null, 2))
 
-  Bun.write("./src/parsed/ids.json", JSON.stringify(list, null, 2))
+    console.log(
+      scraperLog,
+      chalk.greenBright("Scraped ids: ", chalk.yellowBright(list.length))
+    )
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      console.error(
+        scraperLog,
+        chalk.redBright(
+          `[API ERROR] Request failed with status ${
+            error.response?.status || "unknown"
+          }`
+        )
+      )
+    } else {
+      console.error(
+        scraperLog,
+        chalk.redBright("Unexpected error in scrapeIds"),
+        error
+      )
+    }
 
-  console.log(
-    chalk.magentaBright("[SCRAPPER]"),
-    chalk.greenBright("Scraped ids: ", chalk.yellowBright(list.length))
-  )
+    console.warn(
+      scraperLog,
+      chalk.yellow("The scraper will try to run again if the cron job is set")
+    )
+  }
+
+  return true
 }

@@ -5,6 +5,7 @@ import { getInfos } from "../routes/info/handlers"
 import { getName } from "../routes/names/handlers"
 import { Lesson, Timetable } from "../types"
 import chalk from "chalk"
+import { scraperLog } from "../lib/console"
 
 /*
   ! DISCLAIMER !
@@ -21,10 +22,7 @@ export async function scrapeTimetables() {
 
   const start = Date.now()
 
-  console.log(
-    chalk.magentaBright("[SCRAPPER]"),
-    chalk.greenBright("Scraping timetables...")
-  )
+  console.log(scraperLog, chalk.greenBright("Scraping timetables..."))
 
   for (const info of infos) {
     const timetable = await scrapTimetable(info.id)
@@ -34,7 +32,7 @@ export async function scrapeTimetables() {
   const end = Date.now()
 
   console.log(
-    chalk.magentaBright("[SCRAPPER]"),
+    scraperLog,
     chalk.greenBright("Scrapped"),
     chalk.yellowBright(timetables.length),
     chalk.greenBright("timetables in"),
@@ -43,6 +41,8 @@ export async function scrapeTimetables() {
   )
 
   Bun.write("./src/parsed/timetables.json", JSON.stringify(timetables))
+
+  return true
 }
 
 export async function scrapTimetable(id = "o12") {
@@ -50,6 +50,15 @@ export async function scrapTimetable(id = "o12") {
     throw new Error("Invalid id: " + id)
   }
   const { data: html } = await api.get(`${config.timetablesUrl}/${id}.html`)
+
+  if (!html) {
+    console.warn(
+      scraperLog,
+      chalk.yellow("Received empty response, skipping scraping")
+    )
+    return
+  }
+
   const $ = load(html)
 
   const name = await getName(id)
