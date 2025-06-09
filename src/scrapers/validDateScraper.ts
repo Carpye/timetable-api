@@ -12,9 +12,9 @@ export async function scrapeDate() {
     const { data: html } = await api.get(`${config.timetablesUrl}/s1.html`)
     const $ = load(html)
     const dateText = $("td:contains('Obowiązuje od:')").text()
-
+    
     const dateMatch = dateText.match(
-      /Obowiązuje od: (\d{1,2}\.\d{1,2}\.\d{4}) r\./
+      /Obowiązuje od: (\d{1,2}\.\d{1,2}\.\d{4})/
     )
 
     if (dateMatch) {
